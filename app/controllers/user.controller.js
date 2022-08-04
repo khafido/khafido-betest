@@ -44,7 +44,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findByAccountNumber = (req, res) => {
-    User.find({ accountNumber: req.params.accountNumber })
+    User.findOne({ accountNumber: req.params.accountNumber })
       .then(data => {
         res.send(data);
       })
@@ -57,7 +57,7 @@ exports.findByAccountNumber = (req, res) => {
 };
 
 exports.findByIdentityNumber = (req, res) => {
-    User.find({ identityNumber: req.params.identityNumber })
+    User.findOne({ identityNumber: req.params.identityNumber })
       .then(data => {
         res.send(data);
       })
