@@ -1,5 +1,5 @@
 {
-  "name": "khafido-betest",
+  "name": "ms-khafido-betest",
   "version": "1.0.0",
   "description": "Backend Test",
   "main": "server.js",
