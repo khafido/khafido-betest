@@ -87,9 +87,9 @@ exports.findByAccountNumber = (req, res) => {
             service.findByAccountNumber(accountNumber)
                 .then(result => {
                     if (result) {
-                        users ? users.push(result) : users = [result];
-
+                        
                         if (process.env.NODE_ENV === 'development') {
+                            users ? users.push(result) : users = [result];
                             client.set('users', JSON.stringify(users), 'EX', 60);
                         }
                         res.status(200).send({ isCached: false, data: result });
@@ -123,9 +123,9 @@ exports.findByIdentityNumber = (req, res) => {
             service.findByIdentityNumber(identityNumber)
                 .then(result => {
                     if (result) {
-                        users ? users.push(result) : users = [result];
                         
                         if (process.env.NODE_ENV === 'development') {
+                            users ? users.push(result) : users = [result];
                             client.set('users', JSON.stringify(users), 'EX', 60);
                         }
                         res.status(200).send({ isCached: false, data: result });
