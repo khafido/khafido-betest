@@ -28,7 +28,7 @@ exports.create = (req, res) => {
     user
         .save(user)
         .then(data => {
-            res.send(data);
+            res.status(201).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -126,8 +126,9 @@ exports.update = (req, res) => {
             message: "Data to update can not be empty!"
         });
     }
-    const id = req.params.id;
-    User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    const accountNumber = req.params.accountNumber;
+    
+    User.findOneAndUpdate({accountNumber: accountNumber}, {$set: req.body}, {new: true})
         .then(data => {
             if (!data) {
                 res.status(404).send({
@@ -137,14 +138,14 @@ exports.update = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error updating User with id=" + id
+                message: "Error updating User with accountNumber=" + accountNumber
             });
         });
 };
 
 exports.delete = (req, res) => {
-    const id = req.params.id;
-    User.findByIdAndRemove(id)
+    const accountNumber = req.params.accountNumber;
+    User.findOneAndDelete({accountNumber: accountNumber})
         .then(data => {
             if (!data) {
                 res.status(404).send({
@@ -158,7 +159,7 @@ exports.delete = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: "Could not delete User with id=" + id
+                message: "Could not delete User with accountNumber=" + accountNumber
             });
         });
 };

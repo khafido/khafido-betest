@@ -27,7 +27,7 @@ module.exports = mongoose => {
           },
         },
         { timestamps: true }
-      ).plugin(uniqueValidator)
+      )
     );
     
     return User;

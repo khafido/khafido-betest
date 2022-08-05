@@ -14,11 +14,11 @@ module.exports = app => {
     // Retrieve all Users by Identity Number
     router.get("/identityNumber/:identityNumber", users.findByIdentityNumber);
 
-    // Update a User with id
-    router.put("/:id", users.update);
+    // Update a User with :accountNumber
+    router.put("/:accountNumber", users.update);
 
-    // Delete a User with id
-    router.delete("/:id", users.delete);
+    // Delete a User with :accountNumber
+    router.delete("/:accountNumber", users.delete);
 
     app.use('/api/users', router);
 }

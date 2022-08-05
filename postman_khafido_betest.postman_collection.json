@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "9f8be8a1-1cfd-4fbe-887f-381424aa1854",
+		"name": "postman_khafido_betest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19774889"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_local}}/api/users",
+							"host": [
+								"{{base_url_local}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Account Number",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_local}}/api/users/accountNumber/123456789",
+							"host": [
+								"{{base_url_local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"accountNumber",
+								"123456789"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Identity Number",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_local}}/api/users/identityNumber/987654321",
+							"host": [
+								"{{base_url_local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"identityNumber",
+								"987654321"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"John Doe\",\r\n    \"accountNumber\": \"123\",\r\n    \"emailAddress\": \"john@gmail.com\",\r\n    \"identityNumber\": \"321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_local}}/api/users",
+							"host": [
+								"{{base_url_local}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"John Updated\",\r\n    \"accountNumber\": \"123456789\",\r\n    \"emailAddress\": \"johnupdated@gmail.com\",\r\n    \"identityNumber\": \"987654321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_local}}/api/users/123456789",
+							"host": [
+								"{{base_url_local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"123456789"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"John Doe\",\r\n    \"accountNumber\": \"123\",\r\n    \"emailAddress\": \"john@gmail.com\",\r\n    \"identityNumber\": \"321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_local}}/api/users/123456789",
+							"host": [
+								"{{base_url_local}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"123456789"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://ms-khafido-betest.herokuapp.com/",
+			"type": "string"
+		},
+		{
+			"key": "base_url_local",
+			"value": "http://localhost:8000/",
+			"type": "string"
+		}
+	]
+}
