@@ -1,6 +1,8 @@
 const db = require("../models");
 const User = db.users;
 const redis = require('redis');
+const jwt = require("jsonwebtoken");
+const service = require('../services/user');
 
 let client;
 
@@ -11,6 +13,27 @@ let client;
 
     await client.connect();
 })();
+
+//create login jwt
+exports.login = (req, res) => {
+    const { accountNumber, identityNumber } = req.body;
+
+    service.findByAccountNumberAndIdentityNumber(accountNumber, identityNumber)
+        .then(user => {
+            if (!user) {
+                return res.status(404).send({
+                    message: "User not found with account number " + accountNumber + " and identity number " + identityNumber
+                });
+            }
+            const id = user._id;
+            const token = jwt.sign({ accountNumber, identityNumber, id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+            res.status(200).json({ token });
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving user."
+            });
+        });
+}
 
 exports.create = (req, res) => {
     if (!req.body) {
@@ -25,9 +48,7 @@ exports.create = (req, res) => {
         identityNumber: req.body.identityNumber
     });
 
-    user
-        .save(user)
-        .then(data => {
+    service.create(user).then(data => {
             res.status(201).send(data);
         })
         .catch(err => {
@@ -39,10 +60,10 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-    User.find()
+    service.findAll()
         .then(data => {
             client.set('users', JSON.stringify(data), 'EX', 60);
-            res.status(200).send({data: data });
+            res.status(200).send({ data: data });
         })
         .catch(err => {
             res.status(500).send({
@@ -58,14 +79,14 @@ exports.findByAccountNumber = (req, res) => {
     const accountNumber = req.params.accountNumber;
     reply.then(data => {
         let users = data ? JSON.parse(data) : [];
-        const userByAccountNumber = users? users.find(user => user.accountNumber === req.params.accountNumber) : false;
-        
+        const userByAccountNumber = users ? users.find(user => user.accountNumber === req.params.accountNumber) : false;
+
         if (userByAccountNumber) {
             res.status(200).send({ isCached: true, data: userByAccountNumber });
         } else {
-            User.findOne({ accountNumber: accountNumber })
+            service.findByAccountNumber(accountNumber)
                 .then(result => {
-                    if(result) {
+                    if (result) {
                         users ? users.push(result) : users = [result];
 
                         client.set('users', JSON.stringify(users), 'EX', 60);
@@ -88,18 +109,18 @@ exports.findByAccountNumber = (req, res) => {
 
 exports.findByIdentityNumber = (req, res) => {
     const reply = client.get('users');
-    
+
     const identityNumber = req.params.identityNumber;
     reply.then(data => {
         let users = data ? JSON.parse(data) : [];
-        const userByIdentityNumber = users? users.find(user => user.identityNumber === req.params.identityNumber) : false;
-        
+        const userByIdentityNumber = users ? users.find(user => user.identityNumber === req.params.identityNumber) : false;
+
         if (userByIdentityNumber) {
             res.status(200).send({ isCached: true, data: JSON.parse(data) });
         } else {
-            User.findOne({ identityNumber: identityNumber })
+            service.findByIdentityNumber(identityNumber)
                 .then(result => {
-                    if(result) {
+                    if (result) {
                         users ? users.push(result) : users = [result];
 
                         client.set('users', JSON.stringify(users), 'EX', 60);
@@ -127,8 +148,8 @@ exports.update = (req, res) => {
         });
     }
     const accountNumber = req.params.accountNumber;
-    
-    User.findOneAndUpdate({accountNumber: accountNumber}, {$set: req.body}, {new: true})
+
+    service.update(accountNumber, req.body)
         .then(data => {
             if (!data) {
                 res.status(404).send({
@@ -145,7 +166,8 @@ exports.update = (req, res) => {
 
 exports.delete = (req, res) => {
     const accountNumber = req.params.accountNumber;
-    User.findOneAndDelete({accountNumber: accountNumber})
+    
+    service.delete(accountNumber)
         .then(data => {
             if (!data) {
                 res.status(404).send({
