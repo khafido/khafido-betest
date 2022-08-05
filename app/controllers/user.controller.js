@@ -81,7 +81,7 @@ exports.findByAccountNumber = (req, res) => {
         let users = data ? JSON.parse(data) : [];
         const userByAccountNumber = users ? users.find(user => user.accountNumber === req.params.accountNumber) : false;
 
-        if (userByAccountNumber) {
+        if (userByAccountNumber && process.env.NODE_ENV === 'development') {
             res.status(200).send({ isCached: true, data: userByAccountNumber });
         } else {
             service.findByAccountNumber(accountNumber)
@@ -89,7 +89,9 @@ exports.findByAccountNumber = (req, res) => {
                     if (result) {
                         users ? users.push(result) : users = [result];
 
-                        client.set('users', JSON.stringify(users), 'EX', 60);
+                        if (process.env.NODE_ENV === 'development') {
+                            client.set('users', JSON.stringify(users), 'EX', 60);
+                        }
                         res.status(200).send({ isCached: false, data: result });
                     } else {
                         res.status(404).send({
@@ -115,15 +117,17 @@ exports.findByIdentityNumber = (req, res) => {
         let users = data ? JSON.parse(data) : [];
         const userByIdentityNumber = users ? users.find(user => user.identityNumber === req.params.identityNumber) : false;
 
-        if (userByIdentityNumber) {
+        if (userByIdentityNumber && process.env.NODE_ENV === 'development') {
             res.status(200).send({ isCached: true, data: JSON.parse(data) });
         } else {
             service.findByIdentityNumber(identityNumber)
                 .then(result => {
                     if (result) {
                         users ? users.push(result) : users = [result];
-
-                        client.set('users', JSON.stringify(users), 'EX', 60);
+                        
+                        if (process.env.NODE_ENV === 'development') {
+                            client.set('users', JSON.stringify(users), 'EX', 60);
+                        }
                         res.status(200).send({ isCached: false, data: result });
                     } else {
                         res.status(404).send({
