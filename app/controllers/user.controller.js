@@ -87,7 +87,6 @@ exports.findByAccountNumber = (req, res) => {
             service.findByAccountNumber(accountNumber)
                 .then(result => {
                     if (result) {
-                        
                         if (process.env.NODE_ENV === 'development') {
                             users ? users.push(result) : users = [result];
                             client.set('users', JSON.stringify(users), 'EX', 60);
@@ -123,7 +122,6 @@ exports.findByIdentityNumber = (req, res) => {
             service.findByIdentityNumber(identityNumber)
                 .then(result => {
                     if (result) {
-                        
                         if (process.env.NODE_ENV === 'development') {
                             users ? users.push(result) : users = [result];
                             client.set('users', JSON.stringify(users), 'EX', 60);
